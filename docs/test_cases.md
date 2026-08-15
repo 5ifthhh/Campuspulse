@@ -143,3 +143,16 @@ The `completed` field was changed to use a default value of 0.
 Tasks could be added successfully.
 
 **Status:** FIXED / PASS
+---
+
+## 11. Budget Validation
+
+**Test:** Attempt to save a budget without entering an amount.
+
+**Expected Result:**  
+The system should prevent submission and require a budget amount.
+
+**Actual Result:**  
+The browser displayed "Please fill out this field."
+
+**Status:** PASS

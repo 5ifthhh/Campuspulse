@@ -20,8 +20,8 @@
             <h2>Welcome to CampusPulse</h2>
             <p>Manage your student budget and keep track of your academic tasks in one place.</p>
 
-            <button>Login</button>
-            <button>Register</button>
+            <a href="login.php">Login</a>
+            <a href="register.php">Register</a>
         </section>
     </main>
 
