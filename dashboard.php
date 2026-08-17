@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
 require_once "includes/db.php";
 
@@ -18,6 +21,7 @@ $totalTasks = 0;
 $completedTasks = 0;
 $pendingTasks = 0;
 
+/* Get user's budget */
 $stmt = $conn->prepare(
     "SELECT amount FROM budgets WHERE user_id = ?"
 );
@@ -33,6 +37,7 @@ if ($result->num_rows === 1) {
 
 $stmt->close();
 
+/* Get total expenses */
 $stmt = $conn->prepare(
     "SELECT COALESCE(SUM(amount), 0) AS total
      FROM expenses
@@ -50,13 +55,15 @@ if ($result->num_rows === 1) {
 
 $stmt->close();
 
+/* Calculate remaining budget */
 $remaining = $budget - $totalSpent;
 
+/* Get task information */
 $stmt = $conn->prepare(
     "SELECT
         COUNT(*) AS total,
         SUM(CASE WHEN completed = 1 THEN 1 ELSE 0 END) AS completed
-     FROM tasks
+     FROM task
      WHERE user_id = ?"
 );
 

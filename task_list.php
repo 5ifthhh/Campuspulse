@@ -11,8 +11,8 @@ if (!isset($_SESSION["user_id"])) {
 $userId = $_SESSION["user_id"];
 
 $stmt = $conn->prepare(
-    "SELECT id, title, description, due_date, priority, completed
-     FROM tasks
+    "SELECT id, title, description, due_date, completed
+     FROM task
      WHERE user_id = ?
      ORDER BY due_date ASC"
 );
@@ -57,7 +57,6 @@ $result = $stmt->get_result();
                     <th>Task</th>
                     <th>Description</th>
                     <th>Due Date</th>
-                    <th>Priority</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -79,10 +78,6 @@ $result = $stmt->get_result();
                         </td>
 
                         <td>
-                            <?php echo htmlspecialchars($task["priority"]); ?>
-                        </td>
-
-                        <td>
                             <?php
                             if ($task["completed"] == 1) {
                                 echo "Completed";
@@ -93,6 +88,7 @@ $result = $stmt->get_result();
                         </td>
 
                         <td>
+
                             <?php if ($task["completed"] == 0): ?>
 
                                 <a href="complete_task.php?id=<?php echo $task["id"]; ?>">
@@ -104,6 +100,7 @@ $result = $stmt->get_result();
                                 Done
 
                             <?php endif; ?>
+
                         </td>
 
                     </tr>

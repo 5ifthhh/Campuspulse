@@ -17,7 +17,7 @@ $taskId = (int) $_GET["id"];
 $userId = $_SESSION["user_id"];
 
 $stmt = $conn->prepare(
-    "UPDATE tasks
+    "UPDATE task
      SET completed = 1
      WHERE id = ? AND user_id = ?"
 );

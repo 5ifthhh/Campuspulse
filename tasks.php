@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 session_start();
 require_once "includes/db.php";
@@ -10,40 +8,43 @@ if (!isset($_SESSION["user_id"])) {
     exit;
 }
 
-$message = "";
 $userId = $_SESSION["user_id"];
+
+$message = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $title = trim($_POST["title"]);
     $description = trim($_POST["description"]);
     $dueDate = $_POST["due_date"];
-    $priority = $_POST["priority"];
 
     if ($title === "" || $dueDate === "") {
-        $message = "Please enter a title and due date.";
-    } elseif (!in_array($priority, ["Low", "Medium", "High"])) {
-        $message = "Please select a valid priority.";
+
+        $message = "Please enter a task title and due date.";
+
     } else {
 
         $stmt = $conn->prepare(
-            "INSERT INTO tasks (user_id, title, description, due_date, priority)
-             VALUES (?, ?, ?, ?, ?)"
+            "INSERT INTO task (user_id, title, description, due_date, completed)
+             VALUES (?, ?, ?, ?, 0)"
         );
 
         $stmt->bind_param(
-            "issss",
+            "isss",
             $userId,
             $title,
             $description,
-            $dueDate,
-            $priority
+            $dueDate
         );
 
         if ($stmt->execute()) {
+
             $message = "Task added successfully.";
+
         } else {
-            $message = "Could not add the task.";
+
+            $message = "Something went wrong. Please try again.";
+
         }
 
         $stmt->close();
@@ -56,19 +57,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Tasks - CampusPulse</title>
+    <title>Add Task - CampusPulse</title>
 
     <link rel="stylesheet" href="css/style.css">
+
 </head>
 
 <body>
 
 <header>
+
     <h1>CampusPulse</h1>
+
     <p>Student Budget & Task Manager</p>
+
 </header>
 
 <main>
@@ -78,12 +84,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <h2>Add Academic Task</h2>
 
         <?php if ($message !== ""): ?>
-            <p><?php echo htmlspecialchars($message); ?></p>
+
+            <p>
+                <?php echo htmlspecialchars($message); ?>
+            </p>
+
         <?php endif; ?>
 
         <form method="POST" action="tasks.php">
 
-            <label for="title">Task Title</label>
+            <label for="title">
+                Task Title
+            </label>
+
             <br>
 
             <input
@@ -95,18 +108,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             <br><br>
 
-            <label for="description">Description</label>
+            <label for="description">
+                Description
+            </label>
+
             <br>
 
             <textarea
                 id="description"
                 name="description"
-                rows="4"
+                rows="5"
             ></textarea>
 
             <br><br>
 
-            <label for="due_date">Due Date</label>
+            <label for="due_date">
+                Due Date
+            </label>
+
             <br>
 
             <input
@@ -118,32 +137,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             <br><br>
 
-            <label for="priority">Priority</label>
-            <br>
-
-            <select id="priority" name="priority" required>
-                <option value="">Select priority</option>
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-            </select>
-
-            <br><br>
-
-            <button type="submit">Add Task</button>
+            <button type="submit">
+                Add Task
+            </button>
 
         </form>
 
         <br>
 
-        <a href="dashboard.php">Back to Dashboard</a>
+        <a href="task_list.php">
+            View My Tasks
+        </a>
+
+        <br><br>
+
+        <a href="dashboard.php">
+            Back to Dashboard
+        </a>
 
     </section>
 
 </main>
 
 <footer>
+
     <p>&copy; 2026 CampusPulse</p>
+
 </footer>
 
 </body>
